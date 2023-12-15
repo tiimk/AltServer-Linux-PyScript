@@ -448,15 +448,15 @@ def main():
     if script_mode:
         if script_mode == 'i':
             devices = device_manager.getDevices()
-            if len(devices) == 0:
-            installaion_manager.selectDevice(devices=devices)
-            if installaion_manager.selectedDevice == None:
-            installaion_manager.getAccount()
-            installaion_manager.getPassword()
-            installaion_manager.selectFile()
-            if installaion_manager.filePath == None:
-            DebugPrint(installaion_manager.getInfo())
-            installaion_manager.run()
+            if len(devices) > 0:
+                installation_manager.selectDevice(devices=devices)
+                if installation_manager.selectedDevice is not None:
+                    installation_manager.getAccount()
+                    installation_manager.getPassword()
+                    installation_manager.selectFile()
+                    if installation_manager.filePath is not None:
+                        DebugPrint(installation_manager.getInfo())
+                        installation_manager.run()
 
         elif script_mode == 'w':
             if NETMUXD_IS_AVAILABLE:
