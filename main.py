@@ -427,6 +427,8 @@ class InstallationManager:
 
 
 def main():
+    script_mode = os.environ.get('SCRIPT_MODE', '').lower()
+    
     if CheckNetworkConnection() == False:
         print("Please connect to network and re-run the script")
         input("Press enter to exit : ")
@@ -441,6 +443,59 @@ def main():
     device_manager = DeviceManager()
     installaion_manager = InstallationManager()
     print(HELP_MSG)
+
+    
+    if script_mode:
+        if script_mode == 'i':
+            devices = device_manager.getDevices()
+            if len(devices) == 0:
+                continue
+            installaion_manager.selectDevice(devices=devices)
+            if installaion_manager.selectedDevice == None:
+                continue
+            installaion_manager.getAccount()
+            installaion_manager.getPassword()
+            installaion_manager.selectFile()
+            if installaion_manager.filePath == None:
+                continue
+            DebugPrint(installaion_manager.getInfo())
+            installaion_manager.run()
+
+        elif script_mode == 'w':
+            if NETMUXD_IS_AVAILABLE:
+                if not Netmuxd_is_on:
+                    netmuxd.switchWiFi()
+                    altserverdaemon.restart()
+            else:
+                print(f"Netmuxd is not support arch : {ARCH}")
+
+        elif script_mode == 't':
+            if Netmuxd_is_on:
+                netmuxd.switchTether()
+                altserverdaemon.restart()
+
+        elif script_mode == 'e':
+            altserverdaemon.kill()
+            anisetteserver.kill()
+            if Netmuxd_is_on:
+                netmuxd.kill()
+            break
+            
+        elif script_mode == 'h':
+            print(HELP_MSG)
+
+        elif script_mode == 'p':
+            devices = device_manager.getDevices()
+            for d in devices:
+                print(f"{d.name} , {d.UDID}")
+
+        elif script_mode == 'u':
+            Update()
+
+        else:
+            print("Invalid option")
+        return
+
     while True:
         option = getAnswer("Enter OPTION to continue : ").lower()
 
