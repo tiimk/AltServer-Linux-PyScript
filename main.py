@@ -449,15 +449,12 @@ def main():
         if script_mode == 'i':
             devices = device_manager.getDevices()
             if len(devices) == 0:
-                continue
             installaion_manager.selectDevice(devices=devices)
             if installaion_manager.selectedDevice == None:
-                continue
             installaion_manager.getAccount()
             installaion_manager.getPassword()
             installaion_manager.selectFile()
             if installaion_manager.filePath == None:
-                continue
             DebugPrint(installaion_manager.getInfo())
             installaion_manager.run()
 
