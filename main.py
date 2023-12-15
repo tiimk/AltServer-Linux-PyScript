@@ -444,57 +444,8 @@ def main():
     installaion_manager = InstallationManager()
     print(HELP_MSG)
 
-    
-    if script_mode:
-        if script_mode == 'i':
-            devices = device_manager.getDevices()
-            if len(devices) > 0:
-                installation_manager.selectDevice(devices=devices)
-                if installation_manager.selectedDevice is not None:
-                    installation_manager.getAccount()
-                    installation_manager.getPassword()
-                    installation_manager.selectFile()
-                    if installation_manager.filePath is not None:
-                        DebugPrint(installation_manager.getInfo())
-                        installation_manager.run()
-
-        elif script_mode == 'w':
-            if NETMUXD_IS_AVAILABLE:
-                if not Netmuxd_is_on:
-                    netmuxd.switchWiFi()
-                    altserverdaemon.restart()
-            else:
-                print(f"Netmuxd is not support arch : {ARCH}")
-
-        elif script_mode == 't':
-            if Netmuxd_is_on:
-                netmuxd.switchTether()
-                altserverdaemon.restart()
-
-        elif script_mode == 'e':
-            altserverdaemon.kill()
-            anisetteserver.kill()
-            if Netmuxd_is_on:
-                netmuxd.kill()
-            break
-            
-        elif script_mode == 'h':
-            print(HELP_MSG)
-
-        elif script_mode == 'p':
-            devices = device_manager.getDevices()
-            for d in devices:
-                print(f"{d.name} , {d.UDID}")
-
-        elif script_mode == 'u':
-            Update()
-
-        else:
-            print("Invalid option")
-        return
-
     while True:
-        option = getAnswer("Enter OPTION to continue : ").lower()
+        option = script_mode if script_mode else getAnswer("Enter OPTION to continue : ").lower()
 
         if option == 'i':
             devices = device_manager.getDevices()
@@ -544,6 +495,9 @@ def main():
 
         else:
             print("Invalid option")
+
+        if script_mode:
+            break
 
 
 HELP_MSG = """
